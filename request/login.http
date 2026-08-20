@@ -1,0 +1,4 @@
+GET  http://localhost:3000/api/accounts/login HTTP/1.1
+content-type: application/json
+authorization: Basic bWFyY29zLnRpcmFvQGljbG91ZC5jb206MzE3MkFwcEw=
+

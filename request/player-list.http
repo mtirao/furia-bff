@@ -1,0 +1,4 @@
+GET  http://localhost:3000/api/players/list HTTP/1.1
+content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjbGllbnRfY3JlZGVudGlhbHMiLCJleHAiOjE3ODgxMTE1NDcsInN1YiI6IjkyNTI1ODQwIn0.T6Pzuac4bgptFruDI8PzjFh5msZUi1vF4n3vJ7Mk5Dg
+
