@@ -2,59 +2,86 @@ import { Router, Request, Response } from 'express';
 
 const router = Router();
 
-router.get('/list', (req: Request, res: Response) => {
-    fetch('http://localhost:3009/api/wanaka/game', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': req.headers.authorization || ''
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        res.json(data);
-    })
-    .catch(error => {
+type Player = {
+    gameid: number;
+    playerid: number;
+};
+
+router.get('/list', async (req: Request, res: Response) => {
+    try {
+        const response = await fetch('http://localhost:3009/api/wanaka/game', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': req.headers.authorization || ''
+            }
+        });
+
+        res.json(await response.json());
+    } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
-    });
+    }
 });
 
-router.get('/:gameId', (req: Request, res: Response) => {
-    fetch(`http://localhost:3009/api/wanaka/game/${req.params.gameId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': req.headers.authorization || ''
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        res.json(data);
-    })
-    .catch(error => {
+router.get('/:gameId/players', async (req: Request, res: Response) => {
+    try {
+        const response = await fetch(`http://localhost:3009/api/wanaka/player/${req.params.gameId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': req.headers.authorization || ''
+            }
+        });
+
+        res.json(await response.json());
+    } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
-    });
+    }
 });
 
-router.post('/', (req: Request, res: Response) => {
-    console.log('Request body:', req.body); // Log the request body for debugging
-    fetch('http://localhost:3009/api/wanaka/game', {
-        method: 'POST',
-        headers: {
+router.get('/:gameId', async (req: Request, res: Response) => {
+    try {
+        const headers = {
             'Content-Type': 'application/json',
             'Authorization': req.headers.authorization || ''
-        },
-        body: JSON.stringify(req.body)
-    })
-    .then(() => {
-        res.status(204).send();
-    })
-    .catch(error => {
+        };
+
+        const gameResponse = await fetch(`http://localhost:3009/api/wanaka/game/${req.params.gameId}`, {
+            method: 'GET',
+            headers
+        });
+
+        const playersResponse = await fetch(`http://localhost:3009/api/wanaka/player/${req.params.gameId}`, {
+            method: 'GET',
+            headers
+        });
+
+        const game = await gameResponse.json();
+        const players: any[] = [];
+        const playersData: Player[] = await playersResponse.json();
+        const filteredData = new Set(playersData.map(player => player.playerid));
+
+        console.log('Players Data:', filteredData);
+        
+        for await (const player of filteredData) {
+            console.log('Player ID:', player);
+            const playerResponse = await fetch(`http://localhost:3010/api/wanaka/player/${player}`, {
+                method: 'GET',
+                headers
+            });
+            players.push(await playerResponse.json());
+            
+        }
+
+
+        res.json({ game, players });
+    } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
-    });
+    }
 });
+
 
 export default router;

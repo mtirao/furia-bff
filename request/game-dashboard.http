@@ -1,0 +1,3 @@
+GET http://localhost:3000/api/dashboard HTTP/1.1
+content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjbGllbnRfY3JlZGVudGlhbHMiLCJleHAiOjE3ODk5Nzk1NDIsInN1YiI6IjkyNTI1ODQwIn0.uuUDJQq8tqBzjr8suQQuvJSInyCK-6TGe75SEqiQeCs

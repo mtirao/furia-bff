@@ -8,8 +8,7 @@ router.get('/login', (req: Request, res: Response) => {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': req.headers.authorization || ''
-        },
-        body: JSON.stringify(req.body)
+        }
     })
     .then(response => response.json())
     .then(data => {

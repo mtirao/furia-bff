@@ -4,6 +4,7 @@ import exampleRouter from './routes/example';
 import authenticateRouter from './routes/authenticate';
 import playersRouter from './routes/players';
 import gamesRouter from './routes/games';
+import dashboardRouter from './routes/dashboard';
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use('/api/games', gamesRouter);
 app.use('/health', healthRouter);
 app.use('/api/example', exampleRouter);
 app.use('/api/accounts', authenticateRouter);
+
+app.use('/api/dashboard', dashboardRouter);
 
 app.use((req: Request, res: Response) => res.status(404).json({ error: 'Not Found' }));
 
